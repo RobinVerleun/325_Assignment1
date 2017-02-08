@@ -1,0 +1,50 @@
+#| Question 2.
+
+Parameters:
+	L1: A list, potentially containing lists, atoms, or nils.
+
+A function which takes a list with sublists nested to any depth, and provides a 
+result such that the result of (flatten x) is a list of atoms where all atoms
+appearing in L1 also appear, in the same order as they appear in L1. 
+
+Flatten serves as a parameter aggregation for the helper function, flatten_helper.
+
+test cases:
+(flatten '(a b c d)) => (a b c d)
+(flatten '(nil)) => (nil)
+(flatten '(a (b c) d)) => (a b c d)
+(flatten '(((((a))))) => (a)
+(flatten '((a) (b c d) (((e)))) => (a b c d e)
+(flatten '(a b c nil)) => (a b c nil)
+#|
+
+(defun flatten (L1)
+	(flatten_helper L1 nil)
+)
+
+|#
+A helper function which does what described above for function flatten.
+Flatten serves as a parameter aggregation for flatten_helper. L2 is always
+intended to be a nil element.
+
+test cases:
+(flatten_helper '(a b c d) nil) => (a b c d)
+(flatten_helper '(nil) nil) => (nil)
+(flatten_helper '(a (b c) d) nil) => (a b c d)
+(flatten_helper '(((((a)))) nil) => (a)
+(flatten_helper '((a) (b c d) (((e))) nil) => (a b c d e)
+(flatten_helper '(a b c nil) nil) => (a b c nil)
+|#
+
+(defun flatten_helper (L1 L2)
+
+	(cond
+		((equal L1 nil)
+			L2)
+		((atom (car L1))
+			(cons (car L1) (flatten_helper (cdr L1) L2)))	
+		(t
+			(flatten_helper (car L1) (flatten_helper (cdr L1) L2)))
+	)
+)
+

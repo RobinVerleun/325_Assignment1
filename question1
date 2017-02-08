@@ -1,0 +1,26 @@
+#| Question 1.
+
+Parameters:
+	L1: A list, containing potentially atoms, lists, or NIL. Can be NIL.
+	 y: An atom or list or NIL.
+
+Function xmember returns T is argument y is a member of the argument list L1,
+and return NIL otherwise. This will also test for lists being members of lists.
+
+Test cases:
+(xmember 5 5) => NIL
+(xmember nil 5) => NIL
+(xmember '(1 2 3 4 5) 5) => T
+(xmember '(1 2 (3 4) 5) '(3 4)) => T
+(xmember '(1 2 3 4 5) '(3 4)) => NIL
+
+#|
+	 
+(defun xmember (L1 y)
+	(cond
+		((atom L1) 			 nil)
+		((eq nil L1) 		 nil)
+		((equal (car L1) y)    T)
+		(t (xmember (cdr L1) y) )
+	)	
+)

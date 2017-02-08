@@ -1,0 +1,54 @@
+#| Question 6
+
+Parameters:
+	S: A numeric sum. A positive number.
+	L: A list of non-negative integers. Can be empty.
+
+Subsetsum is a function which attempts to find a subset of list L which
+adds up to exactly the number S. All numbers in the set L can be used at most
+once, and must be represented in the subset in the same order as they appear in 
+the list. If no solution can be found, nil is returned. Note: multiple solutions
+may exist - the function will return the first one found.
+
+Subsetsum acts as a parameter aggregation for the helper function 'examine_subsets'.
+
+test cases:
+(subsetsum 10 '(1 2 3 4 5 6)) => (4 6)
+(subsetsum 100 '(10 20 30 40 50 60 70 80 90 100)) => (100)
+(subsetsum 7 '(8 9 10)) => (nil)
+#|
+
+(defun subsetsum (S L)
+	(examine_subsets L S nil)
+)
+
+|#
+examine_subsets is a helper function for subsetsum.
+
+Parameters:
+	L: A list of positive integers.
+	sum: a number to add up to.
+	E: an empty list, initialized to nil. 
+
+The function acts by subtracting values of the list from the sum value. Because
+of this, it is checked to see is sum is below zero, or if sum is equal to zero. 
+Both of these cases signal the end of the recursion. If the list of values left
+to be checked is nil, the solution has failed, and the recursions returns nil.
+Otherwise, the function is recursively called on the two remaining cases - 
+the next element of L without modifying sum, or the next element of L while
+modifying sum.
+
+This function will eventually check all possible combinations of values to create
+a solution if it does not find a solution earlier during the runtime.
+#|
+
+(defun examine_subsets (L sum E)
+	(cond
+		((< sum 0) nil)									 ;if the sum is less than 0, remove this subset
+		((= sum 0) E)	 							 ;if the sum is 0, then the subset can be returned
+		((null L) nil) 									 ;if the list of numbers is nil, no more work
+		((> (car L) sum) (examine_subsets (cdr L) sum E)) ;Remove element which is too large
+		(t (or (examine_subsets (cdr L) sum E)
+			(examine_subsets (cdr L) (- sum (car L)) (append E (list(car L))))))
+	)
+)

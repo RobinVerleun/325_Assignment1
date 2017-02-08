@@ -1,0 +1,69 @@
+;Question 5
+#| Part 1
+It is untrue that the function combination (split (mix L2 L1)) will consistently
+return the list set (L1 L2). There are five base cases to consider:
+	1) That the size of L1 is equal to the size of L2.
+	2) That L1 contains 1 element more than L2.
+	3) That L1 contains 2 or more elements than L2.
+	3) That L2 contains 1 more element than L1.
+	5) That L2 contains 2 or more elements than L1.
+The base cases were determined by both analysis and experimental work. As both 
+(split) and (mix) operate on a single atom of each list at a time, the special edge
+cases for each of them come from having a single element more than the other list.
+Any differend in the element count above two has the same effect as if the difference
+was only two.
+
+Below is an analysis of the cases, with examples.
+
+1) The size of L1 is equal to the size of L2.
+	
+	Example set: L1 = (1 2 3), L2 = (4 5 6)
+	(split (mix '(4 5 6) '(1 2 3))) => ((1 2 3) (4 5 6))
+
+	Both split and mix operate in reverse principle when there is equal amounts in
+	each list. They undo eachothers behavior with no oddities.
+
+2) L1 contains 1 element more than L2.
+
+	Example set: L1 = (1 2 3), L2 = (4 5)
+	(split (mix '(4 5) '(1 2 3))) => ((1 2 3) (4 5))
+
+	In this case, mixing the list results in a special edge case - when the 
+	list in the first parameter runs out of the elements, the remainder of the 
+	second list is appended to the result. In the case of 1 element more, this
+	casues intended behavior, which split undoes.
+
+3) L1 contains 2 or more elements than L2.
+
+	Example set: L1 = (1 2 3), L2 = (4)
+	(split (mix '(4) '(1 2 3))) => ((1 2) (4 3))
+
+	Mix begins by making a single list of the elements - (1 4 2 3). This is
+	mix working to fix the mismatched sizes. Split, however, evenly disects the
+	lists, creating the two sublist (1 2) and (4 3).
+
+4) L2 contains 1 element more than L1.
+
+	Example set: L1 = (1 2), L2 = (3 4 5)
+	(split (mix '(3 4 5) '(1 2))) => ((1 2 5) (3 4))
+
+	Mix begins by making the single list (1 3 2 4 5). Split then divides the list
+	into ((1 2 5) (3 4)), which are not the original lists.
+
+5) Same issues as 4.
+
+Issue 3, 4, and 5 show how the initial premise is not true.
+
+
+Part 2
+This event will always be true. Split will work to divide the list into two
+equal sublists, with the only exception being that the first list could potentially
+be longer than the second by exactly one element. Running of the cases described in
+Part 1, mixing lists together will only result in a list different from the original
+if the second half of the split (cadr (split L)) is two elements smaller than the
+first part of the split (car (split L)) (See case 3) or the first part of the split
+has one element more than the second (see case 4). Since the split operation will
+always, at most, provide one more element to the first half of the split, the mix
+operation will always return the original list L. 
+
+#|
